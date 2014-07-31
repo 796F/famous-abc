@@ -1,21 +1,21 @@
-Meteor.startup(function () {  	
+Meteor.startup(function () {
 	
 	init_data();
 
 });
 
 init_data = function() {
-	fs = Npm.require('fs');
-	path = Npm.require("path");
+	var fs = Npm.require('fs');
+	var path = Npm.require("path");
 	var esprima = Npm.require('esprima');  //https://github.com/ariya/esprima
 	var escodegen = Npm.require('escodegen');  //https://github.com/Constellation/escodegen
 	var estraverse = Npm.require('estraverse');
 
-	get_all_files('/Users/michaelxia/Mike/famous', function (files) {
-		console.log(files);
-	});
-	
 
+	// get_all_files('/Users/michaelxia/Mike/famous', function (files) {
+	// 	console.log(files);
+	// });
+	
 	var kitten_code = esprima.parse('var kitten = new Cat();');
 	var baby_code = esprima.parse('var baby = new Human();');
 
@@ -52,7 +52,7 @@ get_all_files = function(root_path, callback) {
     			return path.extname(file) == '.js';
     		}).forEach(function (file) {
     			test.push(root_path + dir + "/" +file);
-    		}
+    		});
 	    });
 	});
 }
