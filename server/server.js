@@ -9,23 +9,28 @@ Meteor.startup(function () {
 	debug = Npm.require('debug')('test');
 	
 	init_data();
-
 	
 });
 
 
 init_data = function() {
+	//clear the db
+	Classes.remove({});
+	Code.remove({});
+
 	var all_js_files = get_all_js_files(FAMOUS_PATH);
 	all_js_files.forEach(function(file_path) {
 		fs.readFile(file_path, 'utf8', Meteor.bindEnvironment(
 			function(err, data) {
-				if(err)
+				if(err){
 					throw err;
-				else
+				} else{
+					console.log(file_path);
 					extract_class(esprima.parse(data, {loc: true}));
+				}
 			},
 			function(e){
-				console.log(e);
+				console.log("ERROR BINDING METEOR", e);
 			})
 		);
 	});
@@ -53,7 +58,7 @@ handle_prototype = function (node) {
 				var snippet = escodegen.generate(node);
 				var line = node.loc.start.line;
 				var id = addClass("CLASS NAME", fn_name, snippet, 'FILE PATH', line);
-		     	console.log(id);
+		     	// console.log(id);
 		    }
 		} catch (error) {
 			//if its not a prototype, it ends up here.
@@ -68,7 +73,7 @@ handle_constructor = function (node) {
 	    var fn_name = node.id.name;
 	    var line = node.loc.start.line;
 	    var id = addClass("CLASS NAME", fn_name, snippet, 'FILE PATH', line);
-	    console.log(id);
+	    // console.log(id);
 	}
 }
 
