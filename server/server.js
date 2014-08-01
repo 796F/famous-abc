@@ -63,6 +63,7 @@ handle_constructor = function (node) {
 	    var fn_name = node.id.name;
 	    var line = node.loc.start.line;
 	    Meteor.addCode('CODE NAME', fn_name, snippet, 'FILE PATH', line);
+
 	}
 }
 
