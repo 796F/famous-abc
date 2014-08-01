@@ -7,9 +7,8 @@ test = function() {
 
 //access globally with Meteor.call('test');
 Meteor.methods({
-	addSnippet: function (cName, fName, snippet, file_path, line_num) {		
+	addCode: function (cName, fName, snippet, file_path, line_num) {		
 		var id = Random.id();
-		debugger;
 	    Code.insert({
 	    	_id: id,
 	    	className: cName,
@@ -18,7 +17,7 @@ Meteor.methods({
 	    	rating: 0,
 	    	path: file_path,
 	    	//ideally turn this into https://github.com/mizzao/meteor-sharejs/blob/master/package.js#L14
-	    	line: line_num 			
+	    	line: line_num
 	    });
 	    return id;
 	}
