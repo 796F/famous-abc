@@ -1,24 +1,23 @@
 Code = new Meteor.Collection('code');
 
-test = function() {
-	var id = Meteor.call('addSnippet', "surface", "setcontent", "surface.setContent();", "meme.js", 14);
-	console.log(id);
+addCode = function(cname, fname, snippet, file_path, line_num) {
+	var id = Random.id();
+	Meteor.call('addCode', id, cname, fname, snippet, file_path, line_num);
+	return id;
 }
 
-//access globally with Meteor.call('test');
 Meteor.methods({
-	addCode: function (cName, fName, snippet, file_path, line_num) {		
-		var id = Random.id();
+	addCode: function (id, cname, fname, snippet, file_path, line_num) {		
 	    Code.insert({
 	    	_id: id,
-	    	className: cName,
-	    	functionName: fName,
+	    	className: cname,
+	    	functionName: fname,
 	    	content: snippet,
 	    	rating: 0,
 	    	path: file_path,
 	    	//ideally turn this into https://github.com/mizzao/meteor-sharejs/blob/master/package.js#L14
 	    	line: line_num
 	    });
-	    return id;
+	    return;
 	}
 });

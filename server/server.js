@@ -1,4 +1,4 @@
-FAMOUS_PATH = '/Users/michaelxia/Mike/famous';
+FAMOUS_PATH = '../../../../../.famous';
 
 Meteor.startup(function () {
 	fs = Npm.require('fs');
@@ -17,12 +17,17 @@ Meteor.startup(function () {
 init_data = function() {
 	var all_js_files = get_all_js_files(FAMOUS_PATH);
 	all_js_files.forEach(function(file_path) {
-		fs.readFile(file_path, 'utf8', function(err, data) {
-			if(err)
-				throw err;
-			else
-				extract_class(esprima.parse(data, {loc: true}));
-		});
+		fs.readFile(file_path, 'utf8', Meteor.bindEnvironment(
+			function(err, data) {
+				if(err)
+					throw err;
+				else
+					extract_class(esprima.parse(data, {loc: true}));
+			},
+			function(e){
+				console.log(e);
+			})
+		);
 	});
 }
 
@@ -47,7 +52,7 @@ handle_prototype = function (node) {
 				var fn_name = node.left.property.name;
 				var snippet = escodegen.generate(node);
 				var line = node.loc.start.line;
-		     	var id = Meteor.call('addClass', "CLASS NAME", fn_name, snippet, 'FILE PATH', line);
+				var id = addClass("CLASS NAME", fn_name, snippet, 'FILE PATH', line);
 		     	console.log(id);
 		    }
 		} catch (error) {
@@ -62,19 +67,23 @@ handle_constructor = function (node) {
 	    var snippet = escodegen.generate(node);
 	    var fn_name = node.id.name;
 	    var line = node.loc.start.line;
-	    Meteor.addCode('CODE NAME', fn_name, snippet, 'FILE PATH', line);
-
+	    var id = addClass("CLASS NAME", fn_name, snippet, 'FILE PATH', line);
+	    console.log(id);
 	}
 }
 
 //given the root path of famous github repo, extract all files that we need to scan.  
 get_all_js_files = function(root_path, callback) {
 	//get all directories at the root
+	console.log(root_path);
+	console.log(process.cwd());
 	var famous_dirs = fs.readdirSync(root_path).map(function (file) {
 		return path.join(root_path, file);
 	}).filter(function (file) {
 		return fs.statSync(file).isDirectory();
 	});
+	
+
 	var all_js_files = [];
 	//for each directory scan for class defs
     famous_dirs.forEach(function (dir) {
