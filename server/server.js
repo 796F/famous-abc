@@ -1,13 +1,18 @@
 FAMOUS_PATH = '../../../../../.famous';
 
 Meteor.startup(function () {
-	fs = Npm.require('fs');
-	path = Npm.require("path");
-	esprima = Npm.require('esprima');  //https://github.com/ariya/esprima
-	escodegen = Npm.require('escodegen');  //https://github.com/Constellation/escodegen
-	estraverse = Npm.require('estraverse'); //https://github.com/Constellation/estraverse
-	highlighter = Npm.require('highlight.js');
-	debug = Npm.require('debug')('test');
+	path = Npm.require('path');
+  fs = Npm.require('fs');
+  base = path.resolve('.');
+  isBundle = fs.existsSync(base + '/bundle');
+
+  modulePath = base + (isBundle ? '/bundle/static' : '') + '/node_modules';
+	esprima = Npm.require(modulePath + '/esprima');  //https://github.com/ariya/esprima
+	
+	estraverse = Npm.require(modulePath + '/estraverse'); //https://github.com/Constellation/estraverse
+	highlighter = Npm.require(modulePath + '/highlight.js');
+	escodegen = Npm.require(modulePath + '/escodegen');  //https://github.com/Constellation/escodegen
+	
 	init_data();
 	
 });
