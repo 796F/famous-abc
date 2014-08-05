@@ -2,26 +2,23 @@ FAMOUS_PATH = '../../../../../.famous';
 
 Meteor.startup(function () {
 	path = Npm.require('path');
-  fs = Npm.require('fs');
-  base = path.resolve('.');
-  isBundle = fs.existsSync(base + '/bundle');
+	fs = Npm.require('fs');
+	base = path.resolve('.');
+	isBundle = fs.existsSync(base + '/bundle');
 
-  modulePath = base + (isBundle ? '/bundle/static' : '') + '/node_modules';
+	modulePath = base + (isBundle ? '/bundle/static' : '') + '/node_modules';
 	esprima = Npm.require(modulePath + '/esprima');  //https://github.com/ariya/esprima
-	
+
 	estraverse = Npm.require(modulePath + '/estraverse'); //https://github.com/Constellation/estraverse
 	highlighter = Npm.require(modulePath + '/highlight.js');
 	escodegen = Npm.require(modulePath + '/escodegen');  //https://github.com/Constellation/escodegen
-	console.log('calling init from startup');
 	init_data();
 
 	loadExamplesTable();
-	
 });
 
 
 init_data = function() {
-	console.log('start init');
 	//clear the db
 	Classes.remove({});
 	Code.remove({});
@@ -47,7 +44,6 @@ init_data = function() {
 		// );
 	});
 
-	console.log('finished init');
 }
 
 extract_class = function (syntax_tree, local_path) {

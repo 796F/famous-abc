@@ -1,4 +1,4 @@
-EXAMPLES_PATH = '/Users/zpalacios20/Famo.us/famous-abc/.examples'
+EXAMPLES_PATH = '../../../../../.examples'
 
 getProjectDirectories = function(root_path) {
 	return fs.readdirSync(root_path).map(function (file) {
@@ -60,7 +60,7 @@ handleFileData = function(filePath, data) {
 					var cname = node.init.callee.name;
 					var fname = "";
 					if(classCount(cname) > 0) {
-						var snippet = escodegen.generate(node);
+						var snippet = highlighter.highlight('js', escodegen.generate(node)).value;
 						var lineNum = node.loc.start.line;
 						var github = prepare_github_link(filePath, lineNum);
 						addCode(cname, fname, snippet, github, lineNum);
@@ -73,7 +73,7 @@ handleFileData = function(filePath, data) {
 					var cname = "";
 					var fname = node.callee.property.name;
 					if(functionCount(fname) > 0) {
-						var snippet = escodegen.generate(node);
+						var snippet = highlighter.highlight('js', escodegen.generate(node)).value;
 						var lineNum = node.loc.start.line;
 						var github = prepare_github_link(filePath, lineNum);
 						addCode(cname, fname, snippet, github, lineNum);
