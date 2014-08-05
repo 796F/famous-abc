@@ -14,6 +14,8 @@ Meteor.startup(function () {
 	escodegen = Npm.require(modulePath + '/escodegen');  //https://github.com/Constellation/escodegen
 	
 	init_data();
+
+	Meteor.setTimeout(function(){loadExamplesTable();}, 3000);
 	
 });
 
