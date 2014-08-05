@@ -97,7 +97,8 @@ prepare_class_name = function (node) {
 
 prepare_github_link = function (local_path, line) {
 	//parse out the unwanted parts of local path
-	return 'https://github.com/Famous/famous/blob/master' + local_path.substring(22) + "#L" + line;
+	// return 'https://github.com/Famous/famous/blob/master' + local_path.substring(22) + "#L" + line;
+	return 'https://github.com/xiamike/famous-abc/blob/master/.examples' + local_path.substring(24) + "#L" + line;
 }
 
 //given the root path of famous github repo, extract all files that we need to scan.  

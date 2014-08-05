@@ -9,16 +9,11 @@ if (Meteor.isClient) {
     }
   });
 
-  Template.codeblock.events({
-    'click' : function (event, template) {
-      
-    }
-  });
-
   Template.results.events({
     'click' : function (event, template) {
       // $('code').html('');
       if(event.target.id){
+        console.log("ID", event.target.id);
         Session.set('blockId', event.target.id);
       }
     }
@@ -27,8 +22,14 @@ if (Meteor.isClient) {
   Template.results.results = function () {
     var query = Session.get('query');
     var regex = new RegExp("^"+query, "i");
-    var results = query && query.length > 0 ? Classes.find({functionName: regex}) : Classes.find({}, {limit: 20});
-    return results.fetch();
+    var results = query && query.length > 0 ? Code.find({functionName: regex}, {sort: { length: -1 }}) : Code.find({}, {limit: 20});
+    var classNameResults = query && query.length > 0 ? Code.find({className: regex}, {sort: {length: -1}}) : null;
+    if(classNameResults != null){
+      return classNameResults.fetch().concat(results.fetch());
+    }else{
+      return results.fetch();
+    }
+    
   }
 
   Template.search.query = function () {
@@ -37,7 +38,7 @@ if (Meteor.isClient) {
 
   Template.codeblock.code = function () {
     var blockId = Session.get('blockId');
-    return Classes.findOne({_id : blockId});
+    return Code.findOne({_id : blockId});
   };
 
   Template.codeblock.rendered = function() {

@@ -60,10 +60,13 @@ handleFileData = function(filePath, data) {
 					var cname = node.init.callee.name;
 					var fname = "";
 					if(classCount(cname) > 0) {
+						//declaration
 						var snippet = highlighter.highlight('js', escodegen.generate(node)).value;
+						var length = snippet.split("\n").length;
+						if(length < 2) return;
 						var lineNum = node.loc.start.line;
 						var github = prepare_github_link(filePath, lineNum);
-						addCode(cname, fname, snippet, github, lineNum);
+						addCode(cname, fname, snippet, github, lineNum, length);
 					}
 				} catch (error) {
 
@@ -73,10 +76,13 @@ handleFileData = function(filePath, data) {
 					var cname = "";
 					var fname = node.callee.property.name;
 					if(functionCount(fname) > 0) {
+						//function
 						var snippet = highlighter.highlight('js', escodegen.generate(node)).value;
+						var length = snippet.split("\n").length;
+						if(length < 2) return;
 						var lineNum = node.loc.start.line;
 						var github = prepare_github_link(filePath, lineNum);
-						addCode(cname, fname, snippet, github, lineNum);
+						addCode(cname, fname, snippet, github, lineNum, length);
 					}
 				
 				} catch (error) {
@@ -88,9 +94,9 @@ handleFileData = function(filePath, data) {
 }
 
 loadExamplesTable = function() {
-	var estraverse = Npm.require('/usr/local/lib/node_modules/estraverse/');
-	var fs = Npm.require('fs');
-	var esprima = Npm.require('esprima');
+	// var estraverse = Npm.require('/usr/local/lib/node_modules/estraverse/');
+	// var fs = Npm.require('fs');
+	// var esprima = Npm.require('esprima');
 
 	var allJsFiles = getAllJsExampleFiles(EXAMPLES_PATH);
 
