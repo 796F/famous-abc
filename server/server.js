@@ -6,8 +6,8 @@ Meteor.startup(function () {
 	esprima = Npm.require('esprima');  //https://github.com/ariya/esprima
 	escodegen = Npm.require('escodegen');  //https://github.com/Constellation/escodegen
 	estraverse = Npm.require('estraverse'); //https://github.com/Constellation/estraverse
+	highlighter = Npm.require('highlight.js');
 	debug = Npm.require('debug')('test');
-	
 	init_data();
 	
 });
@@ -54,7 +54,8 @@ handle_prototype = function (node, local_path) {
 			if (node.left.object.property.name == 'prototype'){
 				// save node.property.name as the function name on prototype for search
 				var fn_name = node.left.property.name;
-				var snippet = escodegen.generate(node);
+				// var snippet = escodegen.generate(node);
+				var snippet = highlighter.highlight('js', escodegen.generate(node)).value;
 				var line = node.loc.start.line;
 				var github = prepare_github_link(local_path, line);
 				var class_name = node.left.object.object.name;
@@ -69,7 +70,8 @@ handle_prototype = function (node, local_path) {
 
 handle_constructor = function (node, local_path) {
 	if (node.type == "FunctionDeclaration" && node.id.name[0] != '_' && node.id.name[0] == node.id.name[0].toUpperCase()) {
-	    var snippet = escodegen.generate(node);
+	    // var snippet = escodegen.generate(node);
+	    var snippet = highlighter.highlight('js', escodegen.generate(node)).value;
 	    var fn_name = node.id.name;
 	    var line = node.loc.start.line;
 	    var github = prepare_github_link(local_path, line);

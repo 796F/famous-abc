@@ -1,5 +1,8 @@
-<template name="hello">
-  <h1>Hello World!</h1>
-  {{greeting}}
-  <input type="button" value="Click" />
+<template name="codeblock">
+	<div class="codeblock"> 
+		<div class="github-link">
+			<a href="{{code.github}}">{{code.github}}</a>
+		</div>
+		<pre><code class="js">{{code.content}}</code></pre>
+	</div>
 </template>
