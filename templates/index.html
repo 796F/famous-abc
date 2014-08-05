@@ -1,7 +1,20 @@
 <head>
-  <title>famous-abc</title>
+  	<title>famous-abc</title>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/highlight.min.js"></script>
 </head>
 
 <body>
-  {{> hello}}
+
+	<div class="row"> 
+		<div class="col-md-3">
+			{{> search}}
+			<div class="divider-horizontal"></div>
+			{{> results}}
+		</div>
+		<div class="col-md-9">
+			<div class="divider-vertical"></div>
+			{{> codeblock}}
+		</div>
+	</div>
+  
 </body>

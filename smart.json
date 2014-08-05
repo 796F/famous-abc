@@ -1,3 +1,5 @@
 {
-  "packages": {}
+  "packages": {
+    "less-bootstrap-3": {}
+  }
 }
