@@ -12,32 +12,40 @@ Meteor.startup(function () {
 	estraverse = Npm.require(modulePath + '/estraverse'); //https://github.com/Constellation/estraverse
 	highlighter = Npm.require(modulePath + '/highlight.js');
 	escodegen = Npm.require(modulePath + '/escodegen');  //https://github.com/Constellation/escodegen
-	
+	console.log('calling init from startup');
 	init_data();
-	
+	console.log('finished init now in startup');
 });
 
 
 init_data = function() {
+	console.log('start init');
 	//clear the db
 	Classes.remove({});
 	Code.remove({});
 
 	var all_js_files = get_all_js_files(FAMOUS_PATH);
+
 	all_js_files.forEach(function(file_path) {
-		fs.readFile(file_path, 'utf8', Meteor.bindEnvironment(
-			function(err, data) {
-				if(err){
-					throw err;
-				} else{
-					extract_class(esprima.parse(data, {loc: true}), file_path);
-				}
-			},
-			function(e){
-				console.log("ERROR BINDING METEOR", e);
-			})
-		);
+		var data = fs.readFileSync(file_path, 'utf8');
+		extract_class(esprima.parse(data, {loc: true}), file_path);
+
+		// //async way below:
+		// fs.readFile(file_path, 'utf8', Meteor.bindEnvironment(
+		// 	function(err, data) {
+		// 		if(err){
+		// 			throw err;
+		// 		} else{
+		// 			extract_class(esprima.parse(data, {loc: true}), file_path);
+		// 		}
+		// 	},
+		// 	function(e){
+		// 		console.log("ERROR BINDING METEOR", e);
+		// 	})
+		// );
 	});
+
+	console.log('finished init');
 }
 
 extract_class = function (syntax_tree, local_path) {
