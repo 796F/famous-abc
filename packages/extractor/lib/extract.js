@@ -48,12 +48,12 @@ extract_class = function (syntax_tree, local_path) {
   estraverse.traverse(syntax_tree, {
     //to run as you enter a node
     enter: function (node, parent) {
-      console.log("\nENTERING ",escodegen.generate(node));
-      // handle_constructor(node, local_path);
-      // handle_prototype(node, local_path);
+      // console.log("\nENTERING ",escodegen.generate(node));
+      handle_constructor(node, local_path);
+      handle_prototype(node, local_path);
     },
     leave: function (node, parent) {
-      console.log("\nLEAVING");
+      // console.log("\nLEAVING");
     }
   });
 }

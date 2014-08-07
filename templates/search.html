@@ -2,5 +2,10 @@
 	<div class="search-box input-group input-group-lg">
 	  <input id="search-box" type="text" class="form-control" placeholder="Search">
 	</div>
-	<p> Showing results for <b>{{ query }}</b></p>
+	<p style="padding-left: 10px;"> Showing results for <b>{{ query }}</b></p>
+  <p style="padding-left: 10px;"> Did you mean <b>
+  {{#each suggestions}}
+    <a class="suggestion">{{ name }}</a>,
+  {{/each}}
+  </b></p>
 </template>

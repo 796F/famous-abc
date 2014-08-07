@@ -1,7 +1,7 @@
 
 Meteor.startup(function () {
 	
-	init_data();
+	// init_data();
 
 });
 
