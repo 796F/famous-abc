@@ -1,9 +1,8 @@
 if (Meteor.isClient) {
-
   Template.feedback.events({
     'change input': function (event, template) {
       var feedback = event.target.value;
-      addEvent('feedback', feedback);
+      addEvent(Meteor.default_connection._lastSessionId, 'feedback', feedback);
       $(event.target.parentElement).html('<p style="float: right;">THX! you can find mike X and zach P upstairs, usually sofa area</p>');
     }
   });
@@ -11,7 +10,7 @@ if (Meteor.isClient) {
   Template.search.events({
     'keyup input#search-box': function (event, template) {
       Session.set('query', event.target.value);
-      addEvent('query', event.target.value);
+      addEvent(Meteor.default_connection._lastSessionId, 'query', event.target.value);
     },
     'click a.suggestion' : function (event, template) {
       Session.set('query', event.target.innerText);
@@ -30,7 +29,7 @@ if (Meteor.isClient) {
       if(event.target.id && oldId != event.target.id){
         // console.log("ID", event.target.id);
         Session.set('blockId', event.target.id);
-        addEvent('result_click', event.target.id); 
+        addEvent(Meteor.default_connection._lastSessionId, 'result_click', event.target.id); 
       }
     }
   });

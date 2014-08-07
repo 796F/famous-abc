@@ -1,15 +1,13 @@
 Events = new Meteor.Collection('events');
 
-addEvent = function (type, content){
-  var id = Random.id();
-  Meteor.call('addEvent', id, type, content);
-  return id;
+addEvent = function (sid, type, content){
+  Meteor.call('addEvent', sid, type, content);
 }
 
 Meteor.methods({
-  addEvent: function (id, type, content) {
+  addEvent: function (sid, type, content) {
       Events.insert({
-        _id: id,
+        session_id: sid,
         content: content,
         type: type,
         timestamp: new Date()
