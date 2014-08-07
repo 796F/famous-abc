@@ -1,20 +1,35 @@
 if (Meteor.isClient) {
-
-  Template.search.events({
-    'change input#search-box': function (event, template) {
-      console.log('pressed enter');
-    },
-    'keyup input#search-box': function (event, template) {
-      Session.set('query', event.target.value);
+  Template.feedback.events({
+    'change input': function (event, template) {
+      var feedback = event.target.value;
+      addEvent(Meteor.default_connection._lastSessionId, 'feedback', feedback);
+      $(event.target.parentElement).html('<p style="float: right;">THX! you can find mike X and zach P upstairs, usually sofa area</p>');
     }
   });
 
+  Template.search.events({
+    'keyup input#search-box': function (event, template) {
+      Session.set('query', event.target.value);
+      addEvent(Meteor.default_connection._lastSessionId, 'query', event.target.value);
+    },
+    'click a.suggestion' : function (event, template) {
+      Session.set('query', event.target.innerText);
+    }
+  });
+
+  Template.search.suggestions = function() {
+    var query = Session.get('query');
+    // var suggestions = findSuggestion(query);
+    return [{'name' : 'Surface'}, {'name': 'View'}];
+  }
+
   Template.results.events({
     'click' : function (event, template) {
-      // $('code').html('');
-      if(event.target.id){
-        console.log("ID", event.target.id);
+      var oldId = Session.get('blockId');
+      if(event.target.id && oldId != event.target.id){
+        // console.log("ID", event.target.id);
         Session.set('blockId', event.target.id);
+        addEvent(Meteor.default_connection._lastSessionId, 'result_click', event.target.id); 
       }
     }
   });
