@@ -20,6 +20,10 @@ if (Meteor.isClient) {
   Template.search.suggestions = function() {
     var query = Session.get('query');
     // var suggestions = findSuggestion(query);
+    //findTopWords(query);
+    var classes = allClasses();
+    console.log("classes " + classes);
+    console.log("after suggestin return");
     return [{'name' : 'Surface'}, {'name': 'View'}];
   }
 
