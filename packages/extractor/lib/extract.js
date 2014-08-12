@@ -51,11 +51,30 @@ extract_class = function (syntax_tree, local_path) {
       // console.log("\nENTERING ",escodegen.generate(node));
       handle_constructor(node, local_path);
       handle_prototype(node, local_path);
+      handle_default_option(node, local_path);
     },
     leave: function (node, parent) {
       // console.log("\nLEAVING");
     }
   });
+}
+
+handle_default_option = function (node, local_path) {
+  if (node.type == 'AssignmentExpression'){
+
+    try{
+      if (node.left.property.name == 'DEFAULT_OPTIONS'){
+        var class_name = node.left.object.name;
+        var snippet = highlighter.highlight('js', escodegen.generate(node)).value;
+        var line = node.loc.start.line;
+        var github = prepare_source_github_link(local_path, line);
+        var fn_name = 'DEFAULT_OPTIONS';
+        var id = addClass(class_name, fn_name, snippet, github, line);
+      }
+    } catch (error) {
+      //not default options goes here
+    }
+  }
 }
 
 handle_prototype = function (node, local_path) {
@@ -74,7 +93,6 @@ handle_prototype = function (node, local_path) {
     } catch (error) {
       //if its not a prototype, it ends up here.
     }
-       
   }
 }
 
@@ -93,7 +111,7 @@ handle_constructor = function (node, local_path) {
 
 prepare_source_github_link = function (local_path, line) {
   //given a path in my local github and a linenumber, generate a url which points to the github file/line.
-  return 'https://github.com/Famous/famous/blob/master' + local_path.substring(22) + "#L" + line;
+  return 'https://github.com/Famous/famous/blob/master' + local_path.substring(20) + "#L" + line;
 }
 
 //given the root path of famous github repo, extract all files that we need to scan.  

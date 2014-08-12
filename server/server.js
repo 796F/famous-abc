@@ -1,11 +1,9 @@
 
 Meteor.startup(function () {
 	
-	init_data();
+  init_data();
 
 });
-
-
 
 init_data = function() {
   //clear the db
@@ -13,8 +11,8 @@ init_data = function() {
   Code.remove({}); 
   Events.remove({});
 
-  Extractor.extract_source();
-  Extractor.extract_examples();
+  Sourcer.run();
 
+  Extractor.extract_examples();
 
 }
