@@ -1,15 +1,9 @@
 
 Meteor.startup(function () {
 	
-  // init_tree();
   init_data();
 
 });
-
-init_tree = function () {
-    Scoper.build_scope_tree();
-}
-
 
 init_data = function() {
   //clear the db
@@ -19,7 +13,6 @@ init_data = function() {
 
   Sourcer.run();
 
-  Extractor.extract_source();
   Extractor.extract_examples();
 
 }
