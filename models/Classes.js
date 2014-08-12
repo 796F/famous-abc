@@ -1,8 +1,8 @@
 Classes = new Meteor.Collection('classes');
 
-addClass = function (cname, fname, snippet, github, line_num){
+addClass = function (key, cname, fname, snippet, github, line_num, length){
 	var id = Random.id();
-	Meteor.call('addClass', id, cname, fname, snippet, github, line_num);
+	Meteor.call('addClass', id, key, cname, fname, snippet, github, line_num, length);
 	return id;
 }
 
@@ -15,15 +15,16 @@ classCount = function(cname) {
 }
 
 Meteor.methods({
-	addClass: function (id, cname, fname, snippet, github, line_num) {		
+	addClass: function (id, key, cname, fname, snippet, github, line_num, length) {		
 	    Classes.insert({
 	    	_id: id,
+	    	key: key,
 	    	className: cname,
 	    	functionName: fname,
 	    	content: snippet,
 	    	github: github,
-	    	line: line_num
-	    	//ideally turn above two into https://github.com/mizzao/meteor-sharejs/blob/master/package.js#L14
+	    	line: line_num,
+	    	length: length
 	    });
 	    return;
 	},

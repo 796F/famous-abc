@@ -13,9 +13,13 @@ Package.on_use(function (api) {
 
   api.use('underscore', 'server');
   api.add_files('lib/extract.js', 'server');
+  api.add_files('lib/scoper.js', 'server');
+  api.add_files('lib/sourcer.js', 'server');
   
   if (typeof api.export !== 'undefined') {
     api.export('Extractor', 'server');
+    api.export('Scoper', 'server');
+    api.export('Sourcer', 'server');
   }
   
 });

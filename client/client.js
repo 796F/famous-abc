@@ -34,9 +34,30 @@ if (Meteor.isClient) {
     }
   });
 
+  Template.codeblock.constructor = function () {
+    var blockId = Session.get('blockId');
+    var class_name = Code.findOne({_id: blockId}).className;
+    return Classes.find({functionName : class_name});
+  }
+
   Template.results.results = function () {
     var query = Session.get('query');
-    var regex = new RegExp("^"+query, "i");
+    //classifier, decide what kind of query this is
+    var queryArr = query.split(".");
+    
+    
+    Code.distinct('functionName');
+    Classes.distinct('className');
+    if(queryArr.length == 1){
+      //Surface
+      var regex = new RegExp(query, "i");
+    }else if (queryArr.length == 2){
+       Classes.find({className: new RegExp(queryArr[0], "i")});
+       Code.find({functionName: new RegExp(queryArr[1], "i")});
+       
+
+    }
+    
     var results = query && query.length > 0 ? Code.find({functionName: regex}, {sort: { length: -1 }}) : Code.find({}, {limit: 20});
     var classNameResults = query && query.length > 0 ? Code.find({className: regex}, {sort: {length: -1}}) : null;
     if(classNameResults != null){
@@ -55,6 +76,14 @@ if (Meteor.isClient) {
     var blockId = Session.get('blockId');
     return Code.findOne({_id : blockId});
   };
+
+  Template.codeblock.default_options = function () {
+    var blockId = Session.get('blockId');
+    //try to get class name for this block
+    var class_name = Code.findOne({_id: blockId}).className;
+    var default_options = Classes.findOne({className: class_name, functionName: 'DEFAULT_OPTIONS'});
+    return default_options
+  }
 
   Template.codeblock.rendered = function() {
     //hljs is not loaded immediately, must wait a second.  
