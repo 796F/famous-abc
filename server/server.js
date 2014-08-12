@@ -3,7 +3,7 @@ Meteor.startup(function () {
 	
   // init_tree();
   init_data();
-  
+
 });
 
 init_tree = function () {
@@ -19,8 +19,7 @@ init_data = function() {
 
   Sourcer.run();
 
-  // Extractor.extract_source();
-  // Extractor.extract_examples();
-
+  Extractor.extract_source();
+  Extractor.extract_examples();
 
 }

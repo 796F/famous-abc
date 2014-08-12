@@ -113,12 +113,30 @@ extract_node = function(syntax_tree, local_path) {
         result.self = node.left.object.object.name || node.left.object.object.object.name;  
         }
       }
+      if (isDefaultOption(node)) {
+        result.all_functions.push({
+          functionName: 'DEFAULT_OPTIONS',
+          className: node.left.object.name,
+          content: highlighter.highlight('js', escodegen.generate(node)).value,
+          line: node.loc.start.line,
+          github: prepare_source_github_link(local_path, node.loc.start.line)
+
+        });
+      }
     },
     leave: function (node, parent) {
 
     }
   });
   return result;
+}
+
+isDefaultOption = function (node) {
+  try {
+    return node.type == 'AssignmentExpression' && node.left.property.name == 'DEFAULT_OPTIONS' && node.right.type == 'ObjectExpression';
+  }catch (error) {
+    return false;
+  }
 }
 
 isConstructor = function (node) {
