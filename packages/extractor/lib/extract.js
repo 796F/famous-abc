@@ -1,6 +1,7 @@
 FAMOUS_PATH = '../client/app/famous';
 EXAMPLES_PATH = '../client/app/examples';
 
+PriorityQueue = Npm.require('priorityqueuejs');
 path = Npm.require('path');
 fs = Npm.require('fs');
 esprima = Npm.require('esprima'); 

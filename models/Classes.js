@@ -1,8 +1,8 @@
 Classes = new Meteor.Collection('classes');
 
-addClass = function (key, cname, fname, snippet, github, line_num, length){
+addClass = function (key, cname, fname, snippet, github, line_num, length, sourceId){
 	var id = Random.id();
-	Meteor.call('addClass', id, key, cname, fname, snippet, github, line_num, length);
+	Meteor.call('addClass', id, key, cname, fname, snippet, github, line_num, length, sourceId);
 	return id;
 }
 
@@ -23,7 +23,7 @@ allFunctions = function() {
 }
 
 Meteor.methods({
-	addClass: function (id, key, cname, fname, snippet, github, line_num, length) {		
+	addClass: function (id, key, cname, fname, snippet, github, line_num, length, sourceId) {		
 	    Classes.insert({
 	    	_id: id,
 	    	key: key,
@@ -32,7 +32,8 @@ Meteor.methods({
 	    	content: snippet,
 	    	github: github,
 	    	line: line_num,
-	    	length: length
+	    	length: length,
+	    	sourceId: sourceId
 	    });
 	    return;
 	},

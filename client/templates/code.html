@@ -1,0 +1,16 @@
+<template name="codeblock">
+	<div class="codeblock"> 
+	  <pre><code class="js hljs">{{{code.content}}}</code></pre>
+    <div class="code_buttons">
+        <button class="simple_button plus_button"></button>
+        <button class="simple_button minus_button"></button>
+        <button class="simple_button hiding_source"></button>
+    </div>
+    <div class="rating">
+      <button>Votes 5</button>
+    </div>
+    <div class="project_link"> 
+      <button><a class="gh-btn" href="{{code.github}}">GITHUB</a></button> 
+    </div>
+	</div>
+</template>

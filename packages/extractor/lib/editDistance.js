@@ -1,3 +1,5 @@
+PriorityQueue = Npm.require('priorityqueuejs');
+
 editDistance = function(query, possibleWord) {
     //return arr of objects {'name': possibleWord}
     //initialize distMatrix with all zeros
@@ -30,11 +32,26 @@ editDistance = function(query, possibleWord) {
     return distMatrix[query.length][possibleWord.length];
 }
 
-findTopWords = function(query) {
-	var results = [];
-	possibleClasses = Classes.distinct('className', {'className': { $ne: null}}); //allClasses();
-	possibleFunctions = Classes.distinct('functionName', {'functionName': {$ne: null}}); //allFunctions();
-	console.log("classes " + possibleClasses);
-	console.log("functions " + possibleFunctions);
-	return results;
-}
+Meteor.methods({
+    findTopWords : function(query) {
+        console.log(query);
+        var queue = new PriorityQueue(function(a, b) {
+          return b.distance - a.distance;
+        });
+
+        possibleClasses = Classes.find({}, {className: 1, functionName: 1}).fetch();
+        possibleClasses.forEach(function (match_element) {
+            var distance = editDistance(query, match_element.className);
+            queue.enq({distance: distance, value: match_element.className});
+            distance = editDistance(query, match_element.functionName);
+            queue.enq({distance: distance, value: match_element.functionName});
+        });
+        results = [];
+        for(var i=0; i<5; i++) {
+            //pop off five suggestions
+            results.push(queue.deq());
+        }
+        console.log(results);
+        return results;
+    }
+});

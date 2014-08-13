@@ -10,6 +10,7 @@ init_data = function() {
  	Classes.remove({});
   Code.remove({}); 
   Events.remove({});
+  Source.remove({});
 
   Sourcer.run();
 
