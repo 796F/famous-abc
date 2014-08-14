@@ -28,12 +28,14 @@ Extractor = {
   },
   extract_examples: function() {
     var allJsFiles = getAllJsExampleFiles(EXAMPLES_PATH);
-    allJsFiles.forEach(function(filePath) {
+    allJsFiles.forEach(function(fileObj) {
+      var filePath = fileObj.filePath;
+      var fileId = fileObj.fileId;
       fs.readFile(filePath, 'utf8', Meteor.bindEnvironment(function(err, data) {
           if(err){
             throw err;
           } else{
-            handleFileData(filePath, data);
+            handleFileData(filePath, data, fileId);
           }
         },
         function (error) {
@@ -182,9 +184,18 @@ getAllJsExampleFiles = function(root_path, callback) {
   });
 
   var jsFiles = [];
+  var fileId = 1;
   sourceFiles.forEach(function(dir) {
+    /*
     var newJsFiles = getJsFilesRecursive(dir);
     jsFiles.push.apply(jsFiles, newJsFiles);
+    */
+    var newJsFiles = getJsFilesRecursive(dir);
+    for (var i = 0; i < newJsFiles.length; i++) {
+      var tempFile = newJsFiles[i];
+      jsFiles.push({filePath:tempFile, fileId:fileId});
+    };
+    fileId += 1;
   });
 
   return jsFiles;
@@ -196,7 +207,7 @@ prepare_example_github_link = function (local_path, line) {
 }
 
 
-handleFileData = function(filePath, data) {
+handleFileData = function(filePath, data, fileId) {
   
   var ast = esprima.parse(data, {loc: true});
   
@@ -213,7 +224,7 @@ handleFileData = function(filePath, data) {
             // if(length < 3) return;
             var lineNum = node.loc.start.line;
             var github = prepare_example_github_link(filePath, lineNum);
-            addCode(cname, fname, snippet, github, lineNum, length);
+            addCode(cname, fname, snippet, github, lineNum, length, fileId);
           }
         } catch (error) {
           console.log(error);
@@ -229,7 +240,7 @@ handleFileData = function(filePath, data) {
             // if(length < 3) return;
             var lineNum = node.loc.start.line;
             var github = prepare_example_github_link(filePath, lineNum);
-            addCode(cname, fname, snippet, github, lineNum, length);
+            addCode(cname, fname, snippet, github, lineNum, length, fileId);
           }
         
         } catch (error) {
