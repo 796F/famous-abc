@@ -1,16 +1,22 @@
 <template name="codeblock">
-	<div class="codeblock"> 
-	  <pre><code class="js hljs">{{{code.content}}}</code></pre>
+  {{#each codeblocks}}
+    {{> block}}
+  {{/each}}
+</template>
+
+<template name="block">
+  <div class="codeblock" data-block-id="{{_id}}">
     <div class="code_buttons">
-        <button class="simple_button plus_button"></button>
-        <button class="simple_button minus_button"></button>
-        <button class="simple_button hiding_source"></button>
+      <button class="simple_button plus_button"></button>
+      <button class="simple_button minus_button"></button>
+      <button class="simple_button hiding_source"></button>
     </div>
     <div class="rating">
-      <button>Votes 5</button>
+      <button>Votes {{votes}}</button>
     </div>
     <div class="project_link"> 
-      <button><a class="gh-btn" href="{{code.github}}">GITHUB</a></button> 
+      <button><a class="gh-btn" href="{{github}}">GITHUB</a></button>
     </div>
-	</div>
+    <pre><code class="js hljs">{{{content}}}</code></pre>
+  </div>
 </template>

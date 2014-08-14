@@ -5,7 +5,7 @@ if (Meteor.isClient) {
       if(event.target.id && oldId != event.target.id){
         // console.log("ID", event.target.id);
         Session.set('blockId', event.target.id);
-        addEvent(Meteor.default_connection._lastSessionId, 'result_click', event.target.id); 
+        addEvent(Meteor.default_connection._lastSessionId, 'result_click', event.target.id);
       }
     }
   });

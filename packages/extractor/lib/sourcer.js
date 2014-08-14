@@ -86,7 +86,7 @@ extract_node = function(syntax_tree, local_path, sourceId) {
     all_functions: [],
     constructor: undefined,
     children: [],
-    sourceId: sourceId
+    sourceId: sourceId,
   };
   estraverse.traverse(syntax_tree, {
     enter: function (node, parent) {

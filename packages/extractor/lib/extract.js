@@ -192,7 +192,7 @@ getAllJsExampleFiles = function(root_path, callback) {
 
 
 prepare_example_github_link = function (local_path, line) {
-  return 'https://github.com/xiamike/famous-abc/blob/master/.examples' + local_path.substring(24) + "#L" + line;
+  return 'https://github.com/xiamike/famous-abc/tree/master/public/examples' + local_path.substring(22) + "#L" + line;
 }
 
 
@@ -210,7 +210,7 @@ handleFileData = function(filePath, data) {
             //declaration
             var snippet = highlighter.highlight('js', escodegen.generate(node)).value;
             var length = snippet.split("\n").length;
-            if(length < 3) return;
+            // if(length < 3) return;
             var lineNum = node.loc.start.line;
             var github = prepare_example_github_link(filePath, lineNum);
             addCode(cname, fname, snippet, github, lineNum, length);
@@ -222,11 +222,11 @@ handleFileData = function(filePath, data) {
         try {         
           var cname = "";
           var fname = node.callee.property.name;
-          if(functionCount(fname) > 0) {
+          if(functionCount(cname, fname) > 0) {
             //function
             var snippet = highlighter.highlight('js', escodegen.generate(node)).value;
             var length = snippet.split("\n").length;
-            if(length < 3) return;
+            // if(length < 3) return;
             var lineNum = node.loc.start.line;
             var github = prepare_example_github_link(filePath, lineNum);
             addCode(cname, fname, snippet, github, lineNum, length);

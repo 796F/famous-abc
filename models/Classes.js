@@ -6,8 +6,8 @@ addClass = function (key, cname, fname, snippet, github, line_num, length, sourc
 	return id;
 }
 
-functionCount = function(fname) {
-	return Meteor.call('functionCount', fname);
+functionCount = function(cname, fname) {
+	return Meteor.call('functionCount', cname, fname);
 }
 
 classCount = function(cname) {
@@ -33,7 +33,8 @@ Meteor.methods({
 	    	github: github,
 	    	line: line_num,
 	    	length: length,
-	    	sourceId: sourceId
+	    	sourceId: sourceId,
+	    	votes: 0
 	    });
 	    return;
 	},
@@ -57,5 +58,11 @@ Meteor.methods({
 	}, 
 	allFunctions: function() {
 		return Classes.distinct('functionName', {'functionName': {$ne: null}});
+	},
+	voteUp: function (blockId) {
+		Classes.update({_id: blockId}, {$inc : {votes : 1}});
+	},
+	voteDown: function (blockId) {
+		Classes.update({_id: blockId}, {$inc : {votes : -1}});
 	}
 });
