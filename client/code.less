@@ -1,0 +1,82 @@
+@import 'packages/less-bootstrap-3/lib/less/bootstrap.import.less';
+
+div {
+	/*height: 100%;
+	width: 100%;*/
+
+	.codeblock {
+		display: block;
+		margin: 20px;
+
+		.code_buttons {
+			position: absolute;
+			left: 45px;
+			margin-top: 10px;
+			height: 50px;
+			width: 500px;
+			display: none;
+
+			.simple_button {
+				width: 30px;
+				height: 30px;
+				stroke: none;
+				stroke-opacity: 0;
+				padding: 0px;
+				border: none;
+
+				&:active {
+					background-color: black;
+				}
+			}
+
+			.showing_source {
+				background-image: url('img/zoom_out.svg');
+				background-size: 30px 30px;
+				-webkit-filter: invert(100%);
+			}
+
+			.hiding_source {
+				background-image: url('img/zoom_in.svg');
+				background-size: 30px 30px;
+				-webkit-filter: invert(100%);
+			}
+			
+			.plus_button {
+				background-image: url('img/plus.svg');
+				background-size: 30px 30px;
+				-webkit-filter: invert(100%);
+			}
+
+			.minus_button {
+				background-image: url('img/minus.svg');
+				background-size: 30px 30px;
+				-webkit-filter: invert(100%);
+			}
+		}
+
+		.rating {
+			position: absolute;
+			right: 40px;
+			background-color: white;
+			padding: 0px;
+			border: none;
+			font-size: 30px;
+		}
+
+		.project_link {
+			position: absolute;
+			right: 160px;
+		}
+
+	}
+
+	.codeblock:hover .code_buttons {
+		display: block;
+	}
+
+
+}
+
+/*div:hover {
+	background-color: rgba(0, 255, 0, 0.2);
+}*/

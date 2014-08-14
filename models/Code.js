@@ -13,9 +13,8 @@ Meteor.methods({
     	className: cname,
     	functionName: fname,
     	content: snippet,
-    	rating: 0,
-    	path: github,
-    	//ideally turn this into https://github.com/mizzao/meteor-sharejs/blob/master/package.js#L14
+    	votes: 0,
+    	github: github,
     	line: line_num,
     	length: length
     });

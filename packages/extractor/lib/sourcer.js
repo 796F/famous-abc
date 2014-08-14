@@ -12,8 +12,9 @@ Sourcer = {
     all_js_files = all_js_files(FAMOUS_PATH);
     all_js_files.forEach(function(file_path){
       var data = fs.readFileSync(file_path, 'utf8');
+      var sourceId = addSourceFile(data, prepare_source_github_link(file_path, ""));
       var ast = esprima.parse(data, {loc: true});
-      var node = extract_node(ast, file_path);
+      var node = extract_node(ast, file_path, sourceId);
       if (node.self == undefined){
         //utility files that aren't part of the api
       }else if(node.parent) {
@@ -53,7 +54,7 @@ consumeFamily = function (node) {
   node.all_functions.forEach(function (fn) {
     var length = fn.content.split("\n").length;
     var key = node.self + "." + fn.functionName; //Surface.on
-    addClass(key, node.self, fn.functionName, fn.content, fn.github, fn.line, length);
+    addClass(key, node.self, fn.functionName, fn.content, fn.github, fn.line, length, node.sourceId);
   });
 }
 
@@ -79,12 +80,13 @@ searchAndAttach = function (orphan, nodeList, orphanIndex) {
   }
 }
 
-extract_node = function(syntax_tree, local_path) {
+extract_node = function(syntax_tree, local_path, sourceId) {
   var result = {
     parent: false,
     all_functions: [],
     constructor: undefined,
-    children: []
+    children: [],
+    sourceId: sourceId,
   };
   estraverse.traverse(syntax_tree, {
     enter: function (node, parent) {
