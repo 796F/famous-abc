@@ -28,7 +28,7 @@ if (Meteor.isClient) {
     //get a list of code blocks that have to deal with the search term
     var query = Session.get('query');
     var regex = new RegExp(query, "i");
-    var results = query && query.length > 0 ? Code.find({functionName: regex}, {sort: { votes: -1 }}) : Code.find({}, {limit: 100});
+    var results = query && query.length > 0 ? Code.find({content: regex}, {sort: { votes: -1 }}) : Code.find({}, {limit: 100});
     return results.fetch();
   };
 }

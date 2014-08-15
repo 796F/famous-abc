@@ -1,13 +1,15 @@
 Code = new Meteor.Collection('code');
 
-addCode = function(cname, fname, snippet, github, line_num, length, fileId) {
+addCode = function(cname, fname, snippet, github, line_num, length, projectId) {
 	var id = Random.id();
-	Meteor.call('addCode', id, cname, fname, snippet, github, line_num, length, fileId);
+	Meteor.call('addCode', id, cname, fname, snippet, github, line_num, length, projectId
+);
 	return id;
 }
 
 Meteor.methods({
-	addCode: function (id, cname, fname, snippet, github, line_num, length, fileId) {		
+	addCode: function (id, cname, fname, snippet, github, line_num, length, projectId
+) {		
     Code.insert({
     	_id: id,
     	className: cname,
@@ -17,7 +19,8 @@ Meteor.methods({
     	github: github,
     	line: line_num,
     	length: length,
-        fileId: fileId
+        projectId: projectId
+
     });
 	}
 });
