@@ -23,4 +23,7 @@ if (Meteor.isClient) {
   Template.search.query = function () {
     return Session.get('query');
   }
+  Template.search.projectName = function () {
+    return Session.get('projectName');
+  }
 }

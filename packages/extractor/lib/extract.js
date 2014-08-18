@@ -30,12 +30,12 @@ Extractor = {
     var allJsFiles = getAllJsExampleFiles(EXAMPLES_PATH);
     allJsFiles.forEach(function(fileObj) {
       var filePath = fileObj.filePath;
-      var fileId = fileObj.fileId;
+      var projectName = fileObj.projectName;
       fs.readFile(filePath, 'utf8', Meteor.bindEnvironment(function(err, data) {
           if(err){
             throw err;
           } else{
-            handleFileData(filePath, data, fileId);
+            handleFileData(filePath, data, projectName);
           }
         },
         function (error) {
@@ -184,18 +184,18 @@ getAllJsExampleFiles = function(root_path, callback) {
   });
 
   var jsFiles = [];
-  var fileId = 1;
   sourceFiles.forEach(function(dir) {
     /*
     var newJsFiles = getJsFilesRecursive(dir);
     jsFiles.push.apply(jsFiles, newJsFiles);
     */
     var newJsFiles = getJsFilesRecursive(dir);
+
     for (var i = 0; i < newJsFiles.length; i++) {
       var tempFile = newJsFiles[i];
-      jsFiles.push({filePath:tempFile, fileId:fileId});
+      var projectName = (tempFile.substring(23)).split('/')[0];
+      jsFiles.push({filePath:tempFile, projectName: projectName});
     };
-    fileId += 1;
   });
 
   return jsFiles;
@@ -206,47 +206,91 @@ prepare_example_github_link = function (local_path, line) {
   return 'https://github.com/xiamike/famous-abc/tree/master/public/examples' + local_path.substring(22) + "#L" + line;
 }
 
+isModuleFunction = function (node) {
+  try {
+    return node.type == 'FunctionExpression' && node.params[0].name == 'require' && node.params[1].name == 'exports';  
+  }catch(error){
+    return false;
+  }
+}
 
-handleFileData = function(filePath, data, fileId) {
-  
+isDefaultOption = function (node) {
+  try {
+    return node.type == 'AssignmentExpression' && node.left.property.name == 'DEFAULT_OPTIONS' && node.right.type == 'ObjectExpression';
+  }catch (error) {
+    return false;
+  }
+}
+
+handleFileData = function(filePath, data, projectName) {
+  var sourceData = highlighter.highlight('js', data).value;
+  var sourceId = addSourceFile(sourceData, prepare_source_github_link(filePath, ""));
   var ast = esprima.parse(data, {loc: true});
   
   estraverse.traverse(ast, {
     enter: function(node) {
-      if (node.init && node.init.type === 'NewExpression') {
-        try {
-          var cname = node.init.callee.name;
-          var fname = "";
-          if(classCount(cname) > 0) {
-            //declaration
-            var snippet = highlighter.highlight('js', escodegen.generate(node)).value;
-            var length = snippet.split("\n").length;
-            // if(length < 3) return;
-            var lineNum = node.loc.start.line;
-            var github = prepare_example_github_link(filePath, lineNum);
-            addCode(cname, fname, snippet, github, lineNum, length, fileId);
-          }
-        } catch (error) {
-          console.log(error);
-        }
-      } else if(node.type === 'CallExpression') {
-        try {         
-          var cname = "";
-          var fname = node.callee.property.name;
-          if(functionCount(cname, fname) > 0) {
-            //function
-            var snippet = highlighter.highlight('js', escodegen.generate(node)).value;
-            var length = snippet.split("\n").length;
-            // if(length < 3) return;
-            var lineNum = node.loc.start.line;
-            var github = prepare_example_github_link(filePath, lineNum);
-            addCode(cname, fname, snippet, github, lineNum, length, fileId);
-          }
-        
-        } catch (error) {
+      // if (node.init && node.init.type === 'NewExpression') {
+      //   try {
+      //     var cname = node.init.callee.name;
+      //     var fname = "";
+      //     if(classCount(cname) > 0) {
+      //       //declaration
+            // var snippet = highlighter.highlight('js', escodegen.generate(node)).value;
+            // var length = snippet.split("\n").length;
+            // // if(length < 3) return;
+            // var lineNum = node.loc.start.line;
+            // var github = prepare_example_github_link(filePath, lineNum);
+            // addCode(cname, fname, snippet, github, lineNum, length, projectName, sourceId);
+      //     }
+      //   }catch(error) {
+      //     console.log(error);
+      //   }
+      // } else 
 
-        }
+      if (node.type === 'FunctionDeclaration' || 
+        !isModuleFunction(node) && node.type === 'FunctionExpression' ||
+        isDefaultOption(node)){
+        var tokenArray = esprima.tokenize(escodegen.generate(node));
+        tokenArray = _.compact(tokenArray.map(function(token) {
+          if (token.type == 'String' || token.type == 'Identifier'){
+            return token.value;
+          }
+        }));
+
+        var snippet = highlighter.highlight('js', escodegen.generate(node)).value;
+        var lineNum = node.loc.start.line;
+        var github = prepare_example_github_link(filePath, lineNum);
+        addCodeSnippet(snippet, github, lineNum, projectName, sourceId, tokenArray);
+
       }
+      // else if (!isModuleFunction(node) && node.type === 'FunctionExpression') {
+      //   var tokenArray = esprima.tokenize(escodegen.generate(node));
+      //   tokenArray.forEach(function (token) {
+      //     if(token.type == 'String' || token.type == 'Identifier') {
+            
+      //     }
+      //   });
+      // }
+
+
+    //   else if(node.type === 'CallExpression') {
+    //     try {         
+    //       var cname = "";
+    //       var fname = node.callee.property.name;
+    //       if(functionCount(cname, fname) > 0) {
+    //         //function
+    //         var snippet = highlighter.highlight('js', escodegen.generate(node)).value;
+    //         var length = snippet.split("\n").length;
+    //         // if(length < 3) return;
+    //         var lineNum = node.loc.start.line;
+    //         var github = prepare_example_github_link(filePath, lineNum);
+    //         addCode(cname, fname, snippet, github, lineNum, length, projectName);
+    //       }
+        
+    //     } catch (error) {
+
+    //     }
+    //   }
     }
   });
 }

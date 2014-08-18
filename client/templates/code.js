@@ -26,9 +26,26 @@ if (Meteor.isClient) {
 
   Template.codeblock.codeblocks = function () {
     //get a list of code blocks that have to deal with the search term
-    var query = Session.get('query');
-    var regex = new RegExp(query, "i");
-    var results = query && query.length > 0 ? Code.find({content: regex}, {sort: { votes: -1 }}) : Code.find({}, {limit: 100});
-    return results.fetch();
+    // var query = Session.get('query');
+    var blockId = Session.get('blockId');
+    // var regex = new RegExp(query, "i");
+    // var results = Code.find({_id: blockId });
+    if(blockId){
+      var block = Code.findOne({_id : blockId});
+      // var inProject = Code.find({projectName: block.projectName, tokenArray: {$in : block.tokenArray}}).fetch();
+      var inFile = Code.find({projectName: block.projectName, sourceId: block.sourceId, tokenArray: {$in : block.tokenArray}}).fetch();
+
+      return inFile;  
+    }
   };
+
+  // Template.source.content = function () {
+  //   try{
+  //     var sourceId = Code.findOne({_id : this._id}).sourceId;
+  //     return Source.findOne({_id: sourceId}).content;  
+  //   } catch( error ){
+  //     console.log( error);
+  //     console.log(Code.findOne({_id : this._id}));
+  //   }
+  // }
 }

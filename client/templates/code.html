@@ -1,7 +1,9 @@
 <template name="codeblock">
+  <div class="code_list">
   {{#each codeblocks}}
     {{> block}}
   {{/each}}
+  </div>
 </template>
 
 <template name="block">
@@ -18,5 +20,10 @@
       <button><a class="gh-btn" href="{{github}}" target="_blank">GITHUB</a></button>
     </div>
     <pre><code class="js hljs">{{{content}}}</code></pre>
+<!--     {{> source }} -->
   </div>
+</template>
+
+<template name="source"> 
+  <pre style="display:none;"><code class="js hljs">{{{content}}}</code></pre>
 </template>

@@ -1,8 +1,16 @@
 @import 'packages/less-bootstrap-3/lib/less/bootstrap.import.less';
 
+html { overflow: hidden; }
+
 div {
 	/*height: 100%;
 	width: 100%;*/
+
+	.code_list {
+		max-height: 690px;
+    overflow-y: scroll;
+    position: relative;
+	}
 
 	.codeblock {
 		display: block;
@@ -65,7 +73,7 @@ div {
 
 		.project_link {
 			position: absolute;
-			right: 120px;
+			right: 140px;
 		}
 
 	}
