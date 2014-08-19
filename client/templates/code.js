@@ -54,10 +54,11 @@ if (Meteor.isClient) {
 makeLinks = function (code) {
   //given a code object, use its tokenArrays field to tag its content field.
   var tokenArr = code.tokenArray;
+  var content = code.content;
   for(var i = 0; i < tokenArr.length; i++) {
     var token = tokenArr[i];
-    var re = new RegExp(token, "g");
-    code.content = code.content.replace(re, "<span class='link' data-link='" + token + "'>" + token + "</span>");
+    var re = new RegExp(token + "[^A-z]", "g");
+    content.replace(re, "<span class='link' data-link='" + token + "'>" + token + "</span>");
   }
   return code;
 }
