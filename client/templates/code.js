@@ -57,7 +57,7 @@ makeLinks = function (code) {
   for(var i = 0; i < tokenArr.length; i++) {
     var token = tokenArr[i];
     var re = new RegExp(token, "g");
-    code.content = content.replace(re, "<span class='link' data-link='" + token + "'>" + token + "</span>");
+    code.content = code.content.replace(re, "<span class='link' data-link='" + token + "'>" + token + "</span>");
   }
   return code;
 }
