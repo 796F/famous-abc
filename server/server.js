@@ -8,7 +8,7 @@ Meteor.startup(function () {
 init_data = function() {
   //clear the db
  	// Classes.remove({});
-  // Code.remove({}); 
+  Code.remove({}); 
   // Events.remove({});
   // Source.remove({});
 

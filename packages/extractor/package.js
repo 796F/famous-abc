@@ -16,11 +16,10 @@ Package.on_use(function (api) {
   api.add_files('lib/editDistance.js', 'server'); 
   api.add_files('lib/scoper.js', 'server');
   api.add_files('lib/sourcer.js', 'server');
-  
+
   if (typeof api.export !== 'undefined') {
     api.export('Extractor', 'server');
     api.export('Sourcer', 'server');
-  
   }
   
 });

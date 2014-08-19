@@ -6,7 +6,6 @@ path = Npm.require('path');
 fs = Npm.require('fs');
 esprima = Npm.require('esprima'); 
 estraverse = Npm.require('estraverse'); 
-highlighter = Npm.require('highlight.js');
 escodegen = Npm.require('escodegen');
 
 Extractor = {
@@ -34,7 +33,8 @@ Extractor = {
       fs.readFile(filePath, 'utf8', Meteor.bindEnvironment(function(err, data) {
           if(err){
             throw err;
-          } else{
+          } else if (data.length < 10000) {
+            console.log(data.length, filePath);
             handleFileData(filePath, data, projectName);
           }
         },
@@ -68,7 +68,7 @@ handle_default_option = function (node, local_path) {
     try{
       if (node.left.property.name == 'DEFAULT_OPTIONS'){
         var class_name = node.left.object.name;
-        var snippet = highlighter.highlight('js', escodegen.generate(node)).value;
+        var snippet = escodegen.generate(node);
         var line = node.loc.start.line;
         var github = prepare_source_github_link(local_path, line);
         var fn_name = 'DEFAULT_OPTIONS';
@@ -87,7 +87,7 @@ handle_prototype = function (node, local_path) {
         // save node.property.name as the function name on prototype for search
         var fn_name = node.left.property.name;
         // var snippet = escodegen.generate(node);
-        var snippet = highlighter.highlight('js', escodegen.generate(node)).value;
+        var snippet = escodegen.generate(node);
         var line = node.loc.start.line;
         var github = prepare_source_github_link(local_path, line);
         var class_name = node.left.object.object.name;
@@ -103,7 +103,7 @@ handle_constructor = function (node, local_path) {
   //if its a function declaration that starts with uppercase and not a private function, its a constructor.  
   if (node.type == "FunctionDeclaration" && node.id.name[0] != '_' && node.id.name[0] == node.id.name[0].toUpperCase()) {
       // var snippet = escodegen.generate(node);
-      var snippet = highlighter.highlight('js', escodegen.generate(node)).value;
+      var snippet = escodegen.generate(node);
       var fn_name = node.id.name;
       var line = node.loc.start.line;
       var github = prepare_source_github_link(local_path, line);
@@ -223,7 +223,7 @@ isDefaultOption = function (node) {
 }
 
 handleFileData = function(filePath, data, projectName) {
-  var sourceData = highlighter.highlight('js', data).value;
+  var sourceData = data;
   var sourceId = addSourceFile(sourceData, prepare_source_github_link(filePath, ""));
   var ast = esprima.parse(data, {loc: true});
   
@@ -257,7 +257,8 @@ handleFileData = function(filePath, data, projectName) {
           }
         }));
 
-        var snippet = highlighter.highlight('js', escodegen.generate(node)).value;
+        // var snippet = highlighter.highlight('js', escodegen.generate(node)).value;
+        var snippet = escodegen.generate(node);
         var lineNum = node.loc.start.line;
         var github = prepare_example_github_link(filePath, lineNum);
         addCodeSnippet(snippet, github, lineNum, projectName, sourceId, tokenArray);

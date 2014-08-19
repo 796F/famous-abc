@@ -94,7 +94,7 @@ extract_node = function(syntax_tree, local_path, sourceId) {
         result.constructor = {
           functionName: node.id.name,
           className: node.id.name,
-          content: highlighter.highlight('js', escodegen.generate(node)).value,
+          content: escodegen.generate(node),
           line: node.loc.start.line,
           github: prepare_source_github_link(local_path, node.loc.start.line),
         }
@@ -108,7 +108,7 @@ extract_node = function(syntax_tree, local_path, sourceId) {
           result.all_functions.push({
           functionName: node.left.property.name,
           className: node.left.object.object.name || node.left.object.object.object.name,
-          content: highlighter.highlight('js', escodegen.generate(node)).value,
+          content: escodegen.generate(node),
           line: node.loc.start.line,
           github: prepare_source_github_link(local_path, node.loc.start.line)
         });
@@ -119,7 +119,7 @@ extract_node = function(syntax_tree, local_path, sourceId) {
         result.all_functions.push({
           functionName: 'DEFAULT_OPTIONS',
           className: node.left.object.name,
-          content: highlighter.highlight('js', escodegen.generate(node)).value,
+          content: escodegen.generate(node),
           line: node.loc.start.line,
           github: prepare_source_github_link(local_path, node.loc.start.line)
 

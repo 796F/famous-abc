@@ -3,11 +3,14 @@ if (Meteor.isClient) {
     'click' : function (event, template) {
       var oldId = Session.get('blockId');
       var blockId = $(event.target).attr('data-block-id');
+      var projectName = $(event.target).attr('data-project-name');
       if(blockId && oldId != blockId){
         Session.set('blockId', blockId);
+        Session.set('projectName', projectName);
         clearHighlighting();
         $(event.target).css('-webkit-filter', 'invert(100%)');
         // addEvent(Meteor.default_connection._lastSessionId, 'result_click', projectName);
+
       }
     }
   });
@@ -16,8 +19,16 @@ if (Meteor.isClient) {
     var query = Session.get('query');
     if(query && query.length > 0){
       var regex = new RegExp(query, "i");
-      var results = Code.find({content: regex}, {projectName: 1}).fetch();
-      return results;  
+      var results = Code.find({content: regex}).fetch();
+      
+      results = _
+      .chain(results)
+      .uniq(results, function (result) { return result.sourceId; })
+      .groupBy('projectName')
+      .map(function(value, key) { return {projectName: key, files: value}; })
+      .value();
+      
+      return results;
     }    
   }
 }

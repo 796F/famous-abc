@@ -1,10 +1,14 @@
 <template name="results"> 
 	<div class="result-list"> 
 	{{#each results}}
-		<div class="result" data-block-id="{{_id}}">
+		<div class="result">
 			<span class="blue">{{projectName}}</span>
 			<br>
-			<!-- <span class="hljs-title">{{functionName}}</span> -->
+			{{#each files}}
+        <div data-block-id="{{_id}}" data-project-name="{{projectName}}">
+        {{_id}}
+        </div>
+      {{/each}}
 		</div>
 	{{/each}}
 	</div>
